@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{url_for('web.static', filename='assets/css/pure-min.css')}}">
+</head>
+<body>
+<h1>{{ welcome_msg }} </h1>
+     <img src="{{url_for('web.static', filename='img/snow_leopard.jpg')}}" alt="this is a snow leopard" height="240" width="320">
+    This is a parameter: {{ random_parameter }}
+</body>
+</html>
