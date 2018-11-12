@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, request
+from flask import Blueprint, render_template, abort, request, Response
 from jinja2 import TemplateNotFound
 import db
 import chart
@@ -11,6 +11,8 @@ from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.models.sources import ColumnDataSource
 
+import csv
+import io
 
 web_blueprint = Blueprint('web', __name__,
             template_folder='templates',
@@ -36,3 +38,19 @@ def plot():
     plot_title = 'Line plot'
     return render_template("pages/chart.html", plot_title=plot_title,
                            the_div=div, the_script=script)
+
+
+@web_blueprint.route('/export')
+def export():
+    data = db.get_garbage_mysql()
+    tempData = io.StringIO()
+    writer = csv.writer(tempData)
+    for row in data:
+        writer.writerow([str(row)])
+    tempData.seek(0)
+    resp = Response(response=tempData,
+                    status=200,
+                    mimetype="text/csv",
+                    headers={"Content-disposition":
+                        "attachment; filename=file.csv"})
+    return resp
